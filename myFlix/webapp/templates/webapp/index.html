@@ -1,6 +1,68 @@
 {% extends "webapp/base.html" %}
 
 {% block content %}
-    <h2>Content for My App</h2>
-    <p>Stuff etc etc.</p>
+<table class="table">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">ID</th>
+      <th scope="col">Title</th>
+      <th scope="col">Year</th>
+      <th scope="col">Director</th>
+      <th scope="col">Genres</th>
+      <th scope="col">Stars</th>
+      <th scope="col">Rating</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for record in context %}
+    <tr>
+        <th scope="row">1</th>
+        <td>{{ record.id }}</td>
+        <td>{{ record.title}}</td>
+        <td>{{ record.year }}</td>
+        <td>{{ record.director }}</td>
+        <td>
+        {% for order_dict in record.genres %}
+            {{ order_dict }}
+            {% for k,v in order_dict.items %}
+                {{ v }}
+            {% endfor %}
+        {% endfor %}
+        </td>
+        <td>
+        {% for star in record.stars %}
+            {{ star }}
+        {% endfor %}
+        </td>
+        <td>
+        {% for rating in record.rating %}
+            {{ rating }}
+        {% endfor %}
+        </td>
+    </tr>
+  {% endfor %}
+{#<ul>#}
+{#    {% for profile in context %}#}
+{#    <li>{{ profile.id }}</li>#}
+{#    {% endfor %}#}
+{#</ul>#}
+  </tbody>
+</table>
+
+<nav aria-label="...">
+  <ul class="pagination justify-content-center">
+    <li class="page-item disabled">
+      <a class="page-link" href="#" tabindex="-1">Previous</a>
+    </li>
+    <li class="page-item"><a class="page-link" href="#">1</a></li>
+    <li class="page-item active">
+      <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+    </li>
+    <li class="page-item"><a class="page-link" href="#">3</a></li>
+    <li class="page-item">
+      <a class="page-link" href="#">Next</a>
+    </li>
+  </ul>
+</nav>
 {% endblock content %}
