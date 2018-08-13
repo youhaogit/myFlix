@@ -23,30 +23,22 @@
         <td>{{ record.year }}</td>
         <td>{{ record.director }}</td>
         <td>
-        {% for order_dict in record.genres %}
-            {{ order_dict }}
-            {% for k,v in order_dict.items %}
-                {{ v }}
-            {% endfor %}
+        {% for genre in record.get_genres %}
+                {{ genre.name }}&nbsp&nbsp
         {% endfor %}
         </td>
         <td>
-        {% for star in record.stars %}
-            {{ star }}
+        {% for star in record.get_stars %}
+            {{ star.name }}&nbsp&nbsp
         {% endfor %}
         </td>
         <td>
-        {% for rating in record.rating %}
-            {{ rating }}
+        {% for rating in record.get_rating %}
+            {{ rating.rating }}
         {% endfor %}
         </td>
     </tr>
   {% endfor %}
-{#<ul>#}
-{#    {% for profile in context %}#}
-{#    <li>{{ profile.id }}</li>#}
-{#    {% endfor %}#}
-{#</ul>#}
   </tbody>
 </table>
 

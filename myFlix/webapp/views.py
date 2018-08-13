@@ -42,4 +42,6 @@ class MovieViewSet(viewsets.ModelViewSet):
         # _page_number, _item_per_page = get_qs_params(request)
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
+        print ('here')
+        print (serializer.data)
         return Response({'context': serializer.data}, template_name='webapp/index.html')
