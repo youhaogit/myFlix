@@ -39,4 +39,4 @@ class MovieViewSet(viewsets.ModelViewSet):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
 
-        return Response({'context': serializer.data}, template_name='webapp/index.html')
+        return Response({'context': serializer.data}, template_name='webapp/main.html')

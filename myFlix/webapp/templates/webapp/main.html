@@ -1,0 +1,114 @@
+{% extends "webapp/base.html" %}
+
+{% load static %}
+
+{% block navbar-header %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">myFlix</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Link</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Dropdown
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#">Disabled</a>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+  </div>
+</nav>
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+    <table class="table">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">ID</th>
+          <th scope="col">Title</th>
+          <th scope="col">Year</th>
+          <th scope="col">Director</th>
+          <th scope="col">Genres</th>
+          <th scope="col">Stars</th>
+          <th scope="col">Rating</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for record in context %}
+        <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{ record.id }}</td>
+            <td>{{ record.title}}</td>
+            <td>{{ record.year }}</td>
+            <td>{{ record.director }}</td>
+            <td>
+            {% for genre in record.get_genres %}
+                    <u>{{ genre.name }}</u>&nbsp&nbsp
+            {% endfor %}
+            </td>
+            <td>
+            {% for star in record.get_stars %}
+                <u>{{ star.name }}</u>&nbsp&nbsp
+            {% endfor %}
+            </td>
+            <td>
+            {% for rating in record.get_rating %}
+                {{ rating.rating }}
+            {% endfor %}
+            </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+    <nav aria-label="...">
+      <ul class="pagination justify-content-center">
+        <li class="page-item ">
+          <a class="page-link" id="page_pre" href="">Previous</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" id="page_left" href=""></a>
+        </li>
+        <li class="page-item active">
+          <a class="page-link" id="page_mid" href=""></a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" id="page_right" href=""></a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" id="page_next" href="">Next</a>
+        </li>
+      </ul>
+    </nav>
+</div>
+{% endblock content %}
+
+
+{% block scripts %}
+
+    <script src="{% static 'webapp/js/btm_nav_bar.js' %}"></script>
+
+{% endblock %}

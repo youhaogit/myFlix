@@ -6,9 +6,11 @@ from webapp import views
 from webapp.views import MovieViewSet
 
 router = routers.SimpleRouter()
-router.register(r'', MovieViewSet, base_name='webapp')
+router.register(r'webapp', MovieViewSet, base_name='webapp')
 
 urlpatterns = router.urls
-# urlpatterns = [
-#     path('', views.index, name='index'),
-# ]
+
+urlpatterns = urlpatterns + [
+    path('', views.index, name='index'),
+]
+
