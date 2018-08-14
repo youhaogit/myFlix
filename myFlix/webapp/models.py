@@ -34,7 +34,7 @@ class Stars(models.Model):
     def __str__(self):
         return self.name
 
-
+# test
 class StarsInMovies(models.Model):
     star = models.ForeignKey('Stars',
                             on_delete=models.SET_NULL, null=True, related_name='starsinmovies_star')
