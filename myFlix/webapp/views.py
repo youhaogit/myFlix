@@ -19,9 +19,6 @@ def index(request):
                   )
 
 
-
-
-
 class MovieViewSet(viewsets.ModelViewSet):
     """
     Movie page viewset
@@ -39,9 +36,7 @@ class MovieViewSet(viewsets.ModelViewSet):
 
     @action(detail=False)
     def movies(self, request):
-        # _page_number, _item_per_page = get_qs_params(request)
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
-        print ('here')
-        print (serializer.data)
+
         return Response({'context': serializer.data}, template_name='webapp/index.html')
