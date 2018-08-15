@@ -41,10 +41,10 @@ class Stars(models.Model):
 
 
 class StarsInMovies(models.Model):
-    star = models.ForeignKey('Stars',
-                            on_delete=models.SET_NULL, null=True, related_name='starsinmovies_star')
-    movie = models.ForeignKey('Movies',
-                            on_delete=models.CASCADE, related_name='starsinmovies_movie')
+    star = models.ForeignKey('Stars', on_delete=models.SET_NULL,
+                             null=True, related_name='starsinmovies_star')
+    movie = models.ForeignKey('Movies', on_delete=models.CASCADE,
+                              related_name='starsinmovies_movie')
 
 
 class Genres(models.Model):
@@ -56,10 +56,10 @@ class Genres(models.Model):
 
 
 class GenresInMovies(models.Model):
-    genre = models.ForeignKey('Genres',
-                                 on_delete=models.SET_NULL, null=True, related_name='genresinmovies_genre')
-    movie = models.ForeignKey('Movies',
-                                 on_delete=models.CASCADE, related_name='genresinmovies_movie')
+    genre = models.ForeignKey('Genres', on_delete=models.SET_NULL,
+                              null=True, related_name='genresinmovies_genre')
+    movie = models.ForeignKey('Movies', on_delete=models.CASCADE,
+                              related_name='genresinmovies_movie')
 
     def __str__(self):
         return self.movie.__str__() + " is of " + self.genre.__str__()
@@ -67,10 +67,10 @@ class GenresInMovies(models.Model):
 
 class Sales(models.Model):
     id = models.IntegerField(primary_key=True)
-    customer = models.ForeignKey('Customers',
-                                    on_delete=models.SET_NULL, null=True)
-    movie = models.ForeignKey('Movies',
-                                 on_delete=models.SET_NULL, null=True)
+    customer = models.ForeignKey('Customers', on_delete=models.SET_NULL,
+                                 null=True)
+    movie = models.ForeignKey('Movies', on_delete=models.SET_NULL,
+                              null=True)
     sale_date = models.DateField()
 
 
@@ -82,13 +82,12 @@ class CreditCards(models.Model):
 
 
 class Ratings(models.Model):
-    movie = models.ForeignKey('Movies',
-                                 on_delete=models.CASCADE, related_name='ratings_movie')
+    movie = models.ForeignKey('Movies', on_delete=models.CASCADE,
+                              related_name='ratings_movie')
     rating = models.FloatField()
     num_votes = models.IntegerField()
 
 
-# TODO edit manager
 class CustomersManager(BaseUserManager):
 
     def _create_user(self, email, password, **kwargs):
@@ -122,17 +121,11 @@ class Customers(AbstractBaseUser, PermissionsMixin):
     address = models.CharField(max_length=200)
 
     is_staff = models.BooleanField(
-        _('staff status'),
         default=False,
         help_text=_('Designates whether the user can log into this admin site.'),
     )
     is_active = models.BooleanField(
-        _('active'),
         default=True,
-        help_text=_(
-            'Designates whether this user should be treated as active. '
-            'Unselect this instead of deleting accounts.'
-        ),
     )
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
 
