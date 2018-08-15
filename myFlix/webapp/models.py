@@ -34,7 +34,7 @@ class Movies(models.Model):
 class Stars(models.Model):
     id = models.CharField(max_length=10, primary_key=True)
     name = models.CharField(max_length=100)
-    birth_year = models.IntegerField()
+    birth_year = models.IntegerField(null=True)
 
     def __str__(self):
         return self.name
@@ -119,7 +119,7 @@ class Customers(AbstractBaseUser, PermissionsMixin):
     credit_card = models.ForeignKey('CreditCards', on_delete=models.SET_NULL,
                                     null=True, related_name='customers_creditcard')
     address = models.CharField(max_length=200)
-
+    password = models.CharField(max_length=128)
     is_staff = models.BooleanField(
         default=False,
         help_text=_('Designates whether the user can log into this admin site.'),
@@ -127,6 +127,7 @@ class Customers(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(
         default=True,
     )
+
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
 
     objects = CustomersManager()

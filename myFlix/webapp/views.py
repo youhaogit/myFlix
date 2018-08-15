@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.renderers import TemplateHTMLRenderer
@@ -27,14 +29,19 @@ class MovieViewSet(viewsets.ModelViewSet):
     renderer_classes = (TemplateHTMLRenderer,)
 
     def get_queryset(self):
-        queryset = Movies.objects.all()
-        _page_number = int(self.request.query_params.get('pageNumber', DEFAULT_PAGE_NUMBER))
-        _item_per_page = int(self.request.query_params.get('itemPerPage', DEFAULT_ITEM_PER_PAGE))
 
-        if _page_number is not None and _item_per_page is not None:
-            return queryset[(_page_number - 1) * _item_per_page : _page_number * _item_per_page]
+        _page_number = int(self.request.GET.get('page', DEFAULT_PAGE_NUMBER))
+        _item_per_page = int(self.request.GET.get('items', DEFAULT_ITEM_PER_PAGE))
 
-    @action(detail=False)
+        # paginator = Paginator(movies, _item_per_page)  # Show #items per page
+        # queryset = paginator.get_page(_page_number)
+        #
+        # return queryset
+
+        movies = list(Movies.objects.all())
+        return movies[:20]
+        # return movies[(_page_number - 1) * _item_per_page : _page_number * _item_per_page]
+
     def movies(self, request):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
