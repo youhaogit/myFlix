@@ -27,9 +27,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
+# associate customer with django user
+AUTH_USER_MODEL = 'webapp.Customers'
 
 # Application definition
-# test git
 
 INSTALLED_APPS = [
     'django.contrib.admin',
