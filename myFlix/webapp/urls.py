@@ -10,7 +10,7 @@ router.register(r'webapp', MovieViewSet, base_name='webapp')
 
 urlpatterns = router.urls
 
-urlpatterns = urlpatterns + [
+urlpatterns += [
     path('', views.index, name='index'),
 ]
 

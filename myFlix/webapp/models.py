@@ -1,4 +1,9 @@
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import PermissionsMixin
+from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
+from django.core.mail import send_mail
 
 
 class Movies(models.Model):
@@ -29,17 +34,17 @@ class Movies(models.Model):
 class Stars(models.Model):
     id = models.CharField(max_length=10, primary_key=True)
     name = models.CharField(max_length=100)
-    birth_year = models.IntegerField()
+    birth_year = models.IntegerField(null=True)
 
     def __str__(self):
         return self.name
 
 
 class StarsInMovies(models.Model):
-    star = models.ForeignKey('Stars',
-                            on_delete=models.SET_NULL, null=True, related_name='starsinmovies_star')
-    movie = models.ForeignKey('Movies',
-                            on_delete=models.CASCADE, related_name='starsinmovies_movie')
+    star = models.ForeignKey('Stars', on_delete=models.SET_NULL,
+                             null=True, related_name='starsinmovies_star')
+    movie = models.ForeignKey('Movies', on_delete=models.CASCADE,
+                              related_name='starsinmovies_movie')
 
 
 class Genres(models.Model):
@@ -51,32 +56,21 @@ class Genres(models.Model):
 
 
 class GenresInMovies(models.Model):
-    genre = models.ForeignKey('Genres',
-                                 on_delete=models.SET_NULL, null=True, related_name='genresinmovies_genre')
-    movie = models.ForeignKey('Movies',
-                                 on_delete=models.CASCADE, related_name='genresinmovies_movie')
+    genre = models.ForeignKey('Genres', on_delete=models.SET_NULL,
+                              null=True, related_name='genresinmovies_genre')
+    movie = models.ForeignKey('Movies', on_delete=models.CASCADE,
+                              related_name='genresinmovies_movie')
 
     def __str__(self):
         return self.movie.__str__() + " is of " + self.genre.__str__()
 
 
-class Customers(models.Model):
-    id = models.IntegerField(primary_key=True)
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    credit_card = models.ForeignKey('CreditCards',
-                              on_delete=models.SET_NULL, null=True, related_name='customers_creditcard')
-    address = models.CharField(max_length=200)
-    email = models.EmailField()
-    password = models.CharField(max_length=20)
-
-
 class Sales(models.Model):
     id = models.IntegerField(primary_key=True)
-    customer = models.ForeignKey('Customers',
-                                    on_delete=models.SET_NULL, null=True)
-    movie = models.ForeignKey('Movies',
-                                 on_delete=models.SET_NULL, null=True)
+    customer = models.ForeignKey('Customers', on_delete=models.SET_NULL,
+                                 null=True)
+    movie = models.ForeignKey('Movies', on_delete=models.SET_NULL,
+                              null=True)
     sale_date = models.DateField()
 
 
@@ -88,7 +82,86 @@ class CreditCards(models.Model):
 
 
 class Ratings(models.Model):
-    movie = models.ForeignKey('Movies',
-                                 on_delete=models.CASCADE, related_name='ratings_movie')
+    movie = models.ForeignKey('Movies', on_delete=models.CASCADE,
+                              related_name='ratings_movie')
     rating = models.FloatField()
     num_votes = models.IntegerField()
+
+
+class CustomersManager(BaseUserManager):
+
+    def _create_user(self, email, password, **kwargs):
+        """
+        Create and save a user with the given email, and password.
+        """
+        if not email:
+            raise ValueError('The given email must be set')
+        email = self.normalize_email(email)
+        user = self.model(email=email, **kwargs)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_user(self, email, password=None, **kwargs):
+        kwargs.setdefault('is_staff', False)
+        kwargs.setdefault('is_superuser', False)
+        return self._create_user(email, password, **kwargs)
+
+    def create_superuser(self, email, password, **kwargs):
+        user = self._create_user(email, password, **kwargs)
+        user.is_staff = True
+        user.is_superuser = True
+        user.save()
+
+
+class Customers(AbstractBaseUser, PermissionsMixin):
+    """
+    Customize user to be compliant with django auth system
+    """
+    id = models.AutoField(primary_key=True)
+    first_name = models.CharField(max_length=30, blank=True)
+    last_name = models.CharField(max_length=30, blank=True)
+    email = models.EmailField(unique=True)
+    credit_card = models.ForeignKey('CreditCards', on_delete=models.SET_NULL,
+                                    null=True, related_name='customers_creditcard')
+    address = models.CharField(max_length=200)
+    password = models.CharField(max_length=128)
+    is_staff = models.BooleanField(
+        default=False,
+        help_text=_('Designates whether the user can log into this admin site.'),
+    )
+    is_active = models.BooleanField(
+        default=True,
+    )
+
+    date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
+
+    objects = CustomersManager()
+
+    EMAIL_FIELD = 'email'
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+
+    def get_full_name(self):
+        """
+        Return the first_name plus the last_name, with a space in between.
+        """
+        full_name = '%s %s' % (self.first_name, self.last_name)
+        return full_name.strip()
+
+    def get_short_name(self):
+        """Return the short name for the user."""
+        return self.first_name
+
+    def email_user(self, subject, message, from_email=None, **kwargs):
+        """Send an email to this user."""
+        send_mail(subject, message, from_email, [self.email], **kwargs)
+
+    def get_username(self):
+        "Return the identifying username for this User"
+        return str(self.id) + ':' + self.get_full_name()
+
+
+
+
+

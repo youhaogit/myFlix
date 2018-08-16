@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.renderers import TemplateHTMLRenderer
@@ -28,11 +30,10 @@ class MovieViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Movies.objects.all()
-        _page_number = int(self.request.query_params.get('pageNumber', DEFAULT_PAGE_NUMBER))
-        _item_per_page = int(self.request.query_params.get('itemPerPage', DEFAULT_ITEM_PER_PAGE))
+        _page_number = int(self.request.GET.get('page', DEFAULT_PAGE_NUMBER))
+        _item_per_page = int(self.request.GET.get('items', DEFAULT_ITEM_PER_PAGE))
 
-        if _page_number is not None and _item_per_page is not None:
-            return queryset[(_page_number - 1) * _item_per_page : _page_number * _item_per_page]
+        return queryset[(_page_number - 1) * _item_per_page : _page_number * _item_per_page]
 
     @action(detail=False)
     def movies(self, request):
