@@ -102,17 +102,23 @@ class CustomersManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_user(self, email, password=None, **extra_fields):
-        extra_fields.setdefault('is_staff', False)
-        extra_fields.setdefault('is_superuser', False)
-        return self._create_user(email, password, **extra_fields)
+    def create_user(self, email, password=None, **kwargs):
+        kwargs.setdefault('is_staff', False)
+        kwargs.setdefault('is_superuser', False)
+        return self._create_user(email, password, **kwargs)
+
+    def create_superuser(self, email, password, **kwargs):
+        user = self._create_user(email, password, **kwargs)
+        user.is_staff = True
+        user.is_superuser = True
+        user.save()
 
 
 class Customers(AbstractBaseUser, PermissionsMixin):
     """
     Customize user to be compliant with django auth system
     """
-    id = models.IntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
     email = models.EmailField(unique=True)

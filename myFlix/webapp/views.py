@@ -29,19 +29,13 @@ class MovieViewSet(viewsets.ModelViewSet):
     renderer_classes = (TemplateHTMLRenderer,)
 
     def get_queryset(self):
-
+        queryset = Movies.objects.all()
         _page_number = int(self.request.GET.get('page', DEFAULT_PAGE_NUMBER))
         _item_per_page = int(self.request.GET.get('items', DEFAULT_ITEM_PER_PAGE))
 
-        # paginator = Paginator(movies, _item_per_page)  # Show #items per page
-        # queryset = paginator.get_page(_page_number)
-        #
-        # return queryset
+        return queryset[(_page_number - 1) * _item_per_page : _page_number * _item_per_page]
 
-        movies = list(Movies.objects.all())
-        return movies[:20]
-        # return movies[(_page_number - 1) * _item_per_page : _page_number * _item_per_page]
-
+    @action(detail=False)
     def movies(self, request):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
