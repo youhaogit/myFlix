@@ -25,6 +25,7 @@ SECRET_KEY = 'nb57xa$i@v%o)28he=+wr&qpd_gbu*8m&iosr7trosx+u2o=eb'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# update
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 # associate customer with django user
@@ -99,6 +100,7 @@ DATABASES = {
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
     ),
     'DEFAULT_PARSER_CLASSES': (
         'rest_framework.parsers.JSONParser',
