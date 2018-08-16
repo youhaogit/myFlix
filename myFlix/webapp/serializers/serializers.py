@@ -38,6 +38,16 @@ class MovieInfoSerializer(serializers.ModelSerializer):
         fields = ('id', 'title', 'year', 'director', 'get_genres', 'get_stars', 'get_rating')
 
 
+class MovieSerializer(serializers.ModelSerializer):
+    get_genres = GenresSerializer(many=True)
+    get_stars = StarsSerializer(many=True)
+    get_rating = RatingsSerializer(many=True)
+
+    class Meta:
+        model = Movies
+        fields = ('id', 'title', 'year', 'director', 'get_genres', 'get_stars', 'get_rating')
+
+
 
 
 

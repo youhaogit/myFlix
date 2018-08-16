@@ -1,4 +1,6 @@
 
+    var QS_PAGE_PREFIX = "?page="
+
     // bottom navigation init
     $(function () {
 
@@ -44,7 +46,7 @@
 
             sessionStorage.setItem('DEFAULT_MID_VALUE', MID_VAL);
 
-            $(this).prop('href', '?pageNumber=' + (MID_VAL))
+            $(this).prop('href', QS_PAGE_PREFIX + (MID_VAL))
 
         });
 
@@ -58,7 +60,7 @@
 
             sessionStorage.setItem('DEFAULT_MID_VALUE', MID_VAL);
 
-            $(this).prop('href', '?pageNumber=' + (MID_VAL))
+            $(this).prop('href', QS_PAGE_PREFIX + (MID_VAL))
         });
 
         $(page_pre).click(function(){
@@ -83,7 +85,7 @@
             $(page_mid).text(MID_VAL);
             $(page_right).text(MID_VAL + 1);
 
-            $(this).prop('href', '?pageNumber=' + (MID_VAL))
+            $(this).prop('href', QS_PAGE_PREFIX + (MID_VAL))
 
         });
 
@@ -97,7 +99,7 @@
 
             sessionStorage.setItem('DEFAULT_MID_VALUE', MID_VAL);
 
-            $(this).prop('href', '?pageNumber=' + (MID_VAL))
+            $(this).prop('href', QS_PAGE_PREFIX + (MID_VAL))
 
         });
 
