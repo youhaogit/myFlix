@@ -3,10 +3,10 @@ from django.urls import path, include
 from rest_framework import routers
 
 from webapp import views
-from webapp.views import MoviesViewSet
+from webapp.views import MovieViewSet
 
 router = routers.SimpleRouter()
-router.register(r'webapp', MoviesViewSet, base_name='webapp')
+router.register(r'webapp', MovieViewSet, base_name='webapp')
 
 urlpatterns = router.urls
 
